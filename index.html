@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kavali - Wishlist Manager</title>
+    <title>Kavali - Premium Wishlist Manager</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        brand: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 600: '#7c3aed', 900: '#4c1d95' },
-                        slate: { 50: '#f8fafc', 800: '#1e293b', 900: '#0f172a' }
+                        brand: { 50: '#f5f3ff', 100: '#ede9fe', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 900: '#4c1d95' },
+                        dark: { bg: '#0f172a', card: '#1e293b', border: '#334155' }
                     }
                 }
             }
@@ -25,99 +28,123 @@
             from { opacity: 0; transform: scale(0.98) translateY(10px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .animate-fade-in {
-            animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
+        .animate-fade-in { animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+        .dark ::-webkit-scrollbar-thumb { background-color: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background-color: #64748b; }
         
-        /* Smooth transitions for cards */
-        .card-hover {
-            transition: all 0.2s ease-in-out;
-        }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-        }
+        /* Smooth transitions */
+        .card-hover { transition: all 0.2s ease-in-out; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        .dark .card-hover:hover { box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.5); border-color: #475569; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen antialiased selection:bg-brand-100 selection:text-brand-900 pb-12">
+<body class="bg-slate-50 dark:bg-dark-bg text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300 pb-12">
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
-        <header class="mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <!-- Header -->
+        <header class="mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div>
-                <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-500 tracking-tight flex items-center gap-3">
-                    <i class="fa-solid fa-sparkles text-brand-500"></i> Kavali
+                <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-500 dark:from-brand-400 dark:to-indigo-400 tracking-tight flex items-center gap-3">
+                    <i class="fa-solid fa-sparkles text-brand-500 dark:text-brand-400"></i> Kavali
                 </h1>
-                <p class="text-slate-500 mt-2 font-medium">Curate, track, and acquire the things you love.</p>
+                <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">Curate, track, and acquire the things you love.</p>
             </div>
-            <button onclick="clearPurchased()" id="clear-btn" class="hidden bg-white border border-slate-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600 text-slate-600 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm flex items-center gap-2">
-                <i class="fa-solid fa-broom"></i> Clear Acquired
-            </button>
+            
+            <div class="flex items-center gap-3 flex-wrap">
+                <!-- Export/Import Data -->
+                <input type="file" id="import-file" class="hidden" accept=".json">
+                <button onclick="document.getElementById('import-file').click()" class="bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-file-import"></i> Import
+                </button>
+                <button onclick="exportData()" class="bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-file-export"></i> Export
+                </button>
+                
+                <!-- Clear Button -->
+                <button onclick="clearPurchased()" id="clear-btn" class="hidden bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-broom"></i> Clear Acquired
+                </button>
+
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="w-10 h-10 rounded-xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-600 dark:text-amber-400 flex items-center justify-center shadow-sm hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block"></i>
+                </button>
+            </div>
         </header>
 
+        <!-- Dashboard / Summary Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex items-center gap-5 relative overflow-hidden">
-                <div class="absolute -right-4 -top-4 w-24 h-24 bg-brand-50 rounded-full opacity-50"></div>
-                <div class="bg-gradient-to-br from-brand-100 to-brand-200 text-brand-600 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10">
+            <!-- Stat 1 -->
+            <div class="bg-white dark:bg-dark-card rounded-3xl p-6 border border-slate-100 dark:border-dark-border shadow-sm flex items-center gap-5 relative overflow-hidden transition-colors">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-brand-50 dark:bg-brand-900/20 rounded-full opacity-50"></div>
+                <div class="bg-gradient-to-br from-brand-100 to-brand-200 dark:from-brand-500/20 dark:to-brand-600/20 text-brand-600 dark:text-brand-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10 border border-brand-50 dark:border-brand-500/10">
                     <i class="fa-solid fa-list-check"></i>
                 </div>
                 <div class="z-10">
-                    <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Total Items</p>
-                    <p class="text-3xl font-bold text-slate-900 mt-1" id="stat-total">0</p>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Items</p>
+                    <p class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1" id="stat-total">0</p>
                 </div>
             </div>
             
-            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex items-center gap-5 relative overflow-hidden">
-                <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full opacity-50"></div>
-                <div class="bg-gradient-to-br from-emerald-100 to-emerald-200 text-emerald-600 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10">
+            <!-- Stat 2 -->
+            <div class="bg-white dark:bg-dark-card rounded-3xl p-6 border border-slate-100 dark:border-dark-border shadow-sm flex items-center gap-5 relative overflow-hidden transition-colors">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-full opacity-50"></div>
+                <div class="bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-500/20 dark:to-emerald-600/20 text-emerald-600 dark:text-emerald-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10 border border-emerald-50 dark:border-emerald-500/10">
                     <i class="fa-solid fa-wallet"></i>
                 </div>
                 <div class="z-10">
-                    <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Remaining Cost</p>
-                    <p class="text-3xl font-bold text-slate-900 mt-1" id="stat-cost">$0.00</p>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Remaining Cost</p>
+                    <p class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1" id="stat-cost">₹0</p>
                 </div>
             </div>
             
-            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex items-center gap-5 relative overflow-hidden">
-                <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-50 rounded-full opacity-50"></div>
-                <div class="bg-gradient-to-br from-amber-100 to-amber-200 text-amber-600 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10">
+            <!-- Stat 3 -->
+            <div class="bg-white dark:bg-dark-card rounded-3xl p-6 border border-slate-100 dark:border-dark-border shadow-sm flex items-center gap-5 relative overflow-hidden transition-colors">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-50 dark:bg-amber-900/20 rounded-full opacity-50"></div>
+                <div class="bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-500/20 dark:to-amber-600/20 text-amber-600 dark:text-amber-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10 border border-amber-50 dark:border-amber-500/10">
                     <i class="fa-solid fa-box-open"></i>
                 </div>
                 <div class="z-10">
-                    <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">To Acquire</p>
-                    <p class="text-3xl font-bold text-slate-900 mt-1" id="stat-remaining">0</p>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">To Acquire</p>
+                    <p class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1" id="stat-remaining">0</p>
                 </div>
             </div>
         </div>
 
+        <!-- Main Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
+            <!-- Left Column: Form -->
             <div class="lg:col-span-4">
-                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sticky top-6">
-                    <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
-                        <h2 class="text-xl font-bold text-slate-800" id="form-title">Add to Kavali</h2>
-                        <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-sm text-slate-400 hover:text-red-500 font-medium transition-colors">
+                <div class="bg-white dark:bg-dark-card rounded-3xl border border-slate-100 dark:border-dark-border shadow-sm p-6 lg:sticky lg:top-6 transition-colors">
+                    <div class="flex items-center justify-between mb-6 border-b border-slate-100 dark:border-dark-border pb-4">
+                        <h2 class="text-xl font-bold text-slate-800 dark:text-white" id="form-title">Add to Kavali</h2>
+                        <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-sm text-slate-400 hover:text-red-500 dark:hover:text-red-400 font-medium transition-colors">
                             Cancel Edit
                         </button>
                     </div>
                     
-                    <form id="add-item-form" class="space-y-5">
+                    <form id="add-item-form" class="space-y-4">
                         <input type="hidden" id="edit-id" value="">
                         
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Item Name <span class="text-red-400">*</span></label>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Item Name <span class="text-red-400">*</span></label>
                             <input type="text" id="input-name" required placeholder="e.g. Sony WH-1000XM5" 
-                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-slate-400">
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 text-slate-900 dark:text-white">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Category <span class="text-red-400">*</span></label>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Category <span class="text-red-400">*</span></label>
                             <select id="input-category" required 
-                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all appearance-none cursor-pointer">
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all appearance-none cursor-pointer text-slate-900 dark:text-white">
                                 <option value="" disabled selected>Select a category</option>
                                 <option value="Materials">Materials</option>
                                 <option value="Products">Products</option>
@@ -128,14 +155,14 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Price ($)</label>
-                                <input type="number" id="input-price" step="0.01" min="0" placeholder="0.00" 
-                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-slate-400">
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Price (₹)</label>
+                                <input type="number" id="input-price" step="1" min="0" placeholder="0" 
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white">
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Priority <span class="text-red-400">*</span></label>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Priority <span class="text-red-400">*</span></label>
                                 <select id="input-priority" required 
-                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all appearance-none cursor-pointer">
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all appearance-none cursor-pointer text-slate-900 dark:text-white">
                                     <option value="Low">Low</option>
                                     <option value="Medium" selected>Medium</option>
                                     <option value="High">High</option>
@@ -144,33 +171,43 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">URL / Link</label>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">URL / Link</label>
                             <input type="url" id="input-url" placeholder="https://..." 
-                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-slate-400">
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Notes (Optional)</label>
+                            <textarea id="input-notes" rows="2" placeholder="Promo codes, specific colors, reasons..." 
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white resize-none"></textarea>
                         </div>
 
                         <button type="submit" id="submit-btn"
-                            class="w-full mt-4 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:ring-4 focus:ring-brand-200 flex justify-center items-center gap-2">
+                            class="w-full mt-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-brand-500/25 transform hover:-translate-y-0.5 focus:ring-4 focus:ring-brand-500/50 flex justify-center items-center gap-2">
                             <i class="fa-solid fa-plus"></i> <span>Add Item</span>
                         </button>
                     </form>
                 </div>
             </div>
 
+            <!-- Right Column: List -->
             <div class="lg:col-span-8 flex flex-col h-full">
                 
-                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mb-6 flex flex-col md:flex-row gap-4 justify-between items-center z-10">
+                <!-- Controls Bar -->
+                <div class="bg-white dark:bg-dark-card p-4 rounded-2xl border border-slate-100 dark:border-dark-border shadow-sm mb-6 flex flex-col md:flex-row gap-4 justify-between items-center z-10 transition-colors">
                     
-                    <div class="relative w-full md:w-1/3">
-                        <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" id="search-input" placeholder="Search Kavali..." 
-                            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition-all">
+                    <!-- Search -->
+                    <div class="relative w-full md:w-5/12">
+                        <i class="fa-solid fa-search absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-500"></i>
+                        <input type="text" id="search-input" placeholder="Search your wishlist..." 
+                            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500">
                     </div>
 
                     <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-                        <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5">
-                            <i class="fa-solid fa-filter text-slate-400 text-sm"></i>
-                            <select id="filter-category" class="bg-transparent text-sm font-medium text-slate-700 outline-none cursor-pointer w-full">
+                        <!-- Category Filter -->
+                        <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 transition-colors">
+                            <i class="fa-solid fa-filter text-slate-400 dark:text-slate-500 text-sm"></i>
+                            <select id="filter-category" class="bg-transparent text-sm font-semibold text-slate-700 dark:text-slate-200 outline-none cursor-pointer w-full">
                                 <option value="All">All Categories</option>
                                 <option value="Materials">Materials</option>
                                 <option value="Products">Products</option>
@@ -179,9 +216,10 @@
                             </select>
                         </div>
                         
-                        <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5">
-                            <i class="fa-solid fa-arrow-down-wide-short text-slate-400 text-sm"></i>
-                            <select id="sort-items" class="bg-transparent text-sm font-medium text-slate-700 outline-none cursor-pointer w-full">
+                        <!-- Sort -->
+                        <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 transition-colors">
+                            <i class="fa-solid fa-arrow-down-wide-short text-slate-400 dark:text-slate-500 text-sm"></i>
+                            <select id="sort-items" class="bg-transparent text-sm font-semibold text-slate-700 dark:text-slate-200 outline-none cursor-pointer w-full">
                                 <option value="date-desc">Newest First</option>
                                 <option value="date-asc">Oldest First</option>
                                 <option value="price-desc">Price: High to Low</option>
@@ -192,26 +230,51 @@
                     </div>
                 </div>
 
-                <div id="empty-state" class="hidden flex-col items-center justify-center py-20 px-4 bg-white rounded-3xl border border-slate-200 border-dashed">
-                    <div class="w-24 h-24 bg-brand-50 rounded-full flex items-center justify-center text-brand-300 text-4xl mb-5">
-                        <i class="fa-solid fa-box-open"></i>
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden flex-col items-center justify-center py-24 px-4 bg-white dark:bg-dark-card rounded-3xl border border-slate-200 dark:border-dark-border border-dashed transition-colors">
+                    <div class="w-24 h-24 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-400 dark:text-brand-500 text-4xl mb-6 shadow-inner">
+                        <i class="fa-solid fa-basket-shopping"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800">Nothing here yet!</h3>
-                    <p class="text-slate-500 mt-2 text-center max-w-sm">Your Kavali is empty. Start adding items you wish to acquire using the form.</p>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Nothing here yet!</h3>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2 text-center max-w-sm">Your Kavali is empty. Start adding items you wish to acquire using the form.</p>
                 </div>
 
+                <!-- Item List Container -->
                 <div id="item-list" class="space-y-4">
-                    </div>
+                    <!-- JS Injects Cards -->
+                </div>
 
             </div>
         </div>
     </div>
 
+    <!-- Application Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Theme Setup ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const htmlElement = document.documentElement;
+            
+            // Check local storage or system preference
+            if (localStorage.getItem('kavali_theme') === 'dark' || (!('kavali_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                htmlElement.classList.add('dark');
+            } else {
+                htmlElement.classList.remove('dark');
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                htmlElement.classList.toggle('dark');
+                if (htmlElement.classList.contains('dark')) {
+                    localStorage.setItem('kavali_theme', 'dark');
+                } else {
+                    localStorage.setItem('kavali_theme', 'light');
+                }
+            });
+
+            // --- State ---
             let wishlist = JSON.parse(localStorage.getItem('kavali_wishlist')) || [];
 
-            // DOM Elements
+            // --- DOM Elements ---
             const form = document.getElementById('add-item-form');
             const listContainer = document.getElementById('item-list');
             const emptyState = document.getElementById('empty-state');
@@ -225,22 +288,32 @@
             const cancelEditBtn = document.getElementById('cancel-edit-btn');
             const formTitle = document.getElementById('form-title');
             const editIdInput = document.getElementById('edit-id');
+            const fileInput = document.getElementById('import-file');
 
-            // Utilities
+            // --- Utilities ---
             const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
-            const formatCurrency = (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+            // Updated to Indian Rupee (INR) formatting, 0 decimal places for cleaner look
+            const formatCurrency = (amount) => {
+                return new Intl.NumberFormat('en-IN', { 
+                    style: 'currency', 
+                    currency: 'INR',
+                    maximumFractionDigits: 0
+                }).format(amount || 0);
+            };
             const escapeHTML = (str) => { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; };
 
-            // Initialize
+            // --- Initialize ---
             renderApp();
 
-            // Listeners
+            // --- Listeners ---
             form.addEventListener('submit', handleAddOrUpdate);
             searchInput.addEventListener('input', renderApp);
             filterSelect.addEventListener('change', renderApp);
             sortSelect.addEventListener('change', renderApp);
+            
+            fileInput.addEventListener('change', handleImport);
 
-            // Handle Add / Update
+            // --- Logic: Add / Update ---
             function handleAddOrUpdate(e) {
                 e.preventDefault();
                 
@@ -250,6 +323,7 @@
                 const price = parseFloat(document.getElementById('input-price').value) || 0;
                 const priority = document.getElementById('input-priority').value;
                 const url = document.getElementById('input-url').value.trim();
+                const notes = document.getElementById('input-notes').value.trim();
 
                 if (!name || !category) return;
 
@@ -257,14 +331,14 @@
                     // Update existing
                     const index = wishlist.findIndex(i => i.id === id);
                     if (index !== -1) {
-                        wishlist[index] = { ...wishlist[index], name, category, price, priority, url };
+                        wishlist[index] = { ...wishlist[index], name, category, price, priority, url, notes };
                     }
-                    cancelEdit(); // Reset form state
+                    cancelEdit();
                 } else {
                     // Add new
                     wishlist.push({
                         id: generateId(),
-                        name, category, price, priority, url,
+                        name, category, price, priority, url, notes,
                         purchased: false,
                         createdAt: Date.now()
                     });
@@ -276,7 +350,7 @@
                 renderApp();
             }
 
-            // Edit Item triggers form population
+            // --- Logic: Edit Item ---
             window.editItem = function(id) {
                 const item = wishlist.find(i => i.id === id);
                 if (!item) return;
@@ -287,18 +361,17 @@
                 document.getElementById('input-price').value = item.price || '';
                 document.getElementById('input-priority').value = item.priority;
                 document.getElementById('input-url').value = item.url || '';
+                document.getElementById('input-notes').value = item.notes || '';
 
-                // Update UI for Edit Mode
+                // UI Update
                 formTitle.textContent = "Edit Item";
                 submitBtn.innerHTML = '<i class="fa-solid fa-save"></i> <span>Save Changes</span>';
-                submitBtn.className = "w-full mt-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:ring-4 focus:ring-amber-200 flex justify-center items-center gap-2";
+                submitBtn.className = "w-full mt-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md transform hover:-translate-y-0.5 flex justify-center items-center gap-2";
                 cancelEditBtn.classList.remove('hidden');
 
-                // Scroll to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
-            // Cancel Edit
             window.cancelEdit = function() {
                 editIdInput.value = '';
                 form.reset();
@@ -306,13 +379,13 @@
                 
                 formTitle.textContent = "Add to Kavali";
                 submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i> <span>Add Item</span>';
-                submitBtn.className = "w-full mt-4 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:ring-4 focus:ring-brand-200 flex justify-center items-center gap-2";
+                submitBtn.className = "w-full mt-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-brand-500/25 transform hover:-translate-y-0.5 focus:ring-4 focus:ring-brand-500/50 flex justify-center items-center gap-2";
                 cancelEditBtn.classList.add('hidden');
             };
 
-            // Delete Item
+            // --- Logic: Delete / Toggle / Clear ---
             window.deleteItem = function(id) {
-                if(confirm("Are you sure you want to remove this item?")) {
+                if(confirm("Remove this item permanently?")) {
                     wishlist = wishlist.filter(item => item.id !== id);
                     if(editIdInput.value === id) cancelEdit();
                     saveData();
@@ -320,7 +393,6 @@
                 }
             };
 
-            // Toggle Purchased
             window.togglePurchased = function(id) {
                 const item = wishlist.find(item => item.id === id);
                 if (item) {
@@ -330,7 +402,6 @@
                 }
             };
 
-            // Clear Purchased
             window.clearPurchased = function() {
                 if(confirm("Clear all items marked as acquired? This cannot be undone.")) {
                     wishlist = wishlist.filter(item => !item.purchased);
@@ -339,10 +410,47 @@
                 }
             };
 
-            // Save
+            // --- Logic: Export / Import ---
+            window.exportData = function() {
+                if(wishlist.length === 0) return alert("Nothing to export!");
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(wishlist));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `kavali_backup_${new Date().toISOString().split('T')[0]}.json`);
+                document.body.appendChild(downloadAnchorNode); // required for firefox
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            };
+
+            function handleImport(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (Array.isArray(importedData)) {
+                            // Merge logic (avoid duplicates by ID, though IDs are random so it mostly appends)
+                            wishlist = importedData; 
+                            saveData();
+                            renderApp();
+                            alert("Data imported successfully!");
+                        } else {
+                            alert("Invalid file format.");
+                        }
+                    } catch (err) {
+                        alert("Error parsing JSON file.");
+                    }
+                    fileInput.value = ""; // Reset input
+                };
+                reader.readAsText(file);
+            }
+
+            // --- Logic: Save ---
             function saveData() { localStorage.setItem('kavali_wishlist', JSON.stringify(wishlist)); }
 
-            // Stats
+            // --- Rendering Functions ---
             function updateDashboard() {
                 const totalItems = wishlist.length;
                 const remainingItems = wishlist.filter(item => !item.purchased).length;
@@ -352,33 +460,30 @@
                 document.getElementById('stat-remaining').textContent = remainingItems;
                 document.getElementById('stat-cost').textContent = formatCurrency(remainingCost);
 
-                // Show/hide clear button
                 const hasPurchased = wishlist.some(i => i.purchased);
                 hasPurchased ? clearBtn.classList.remove('hidden') : clearBtn.classList.add('hidden');
             }
 
-            // Badges
             function getPriorityBadge(priority, isPurchased) {
-                const op = isPurchased ? "opacity-50" : "";
+                const op = isPurchased ? "opacity-50 grayscale" : "";
                 let colors = "";
-                if(priority === 'High') colors = "bg-red-50 text-red-600 border-red-100";
-                else if(priority === 'Medium') colors = "bg-amber-50 text-amber-600 border-amber-100";
-                else colors = "bg-blue-50 text-blue-600 border-blue-100";
+                if(priority === 'High') colors = "bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20";
+                else if(priority === 'Medium') colors = "bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20";
+                else colors = "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20";
                 
-                return `<span class="text-xs font-bold px-2.5 py-1 rounded-md border ${colors} ${op}">${priority}</span>`;
+                return `<span class="text-[10px] uppercase font-bold px-2.5 py-1.5 rounded border tracking-wider ${colors} ${op}">${priority}</span>`;
             }
 
             function getCategoryIcon(cat) {
                 const map = {
-                    'Materials': '<i class="fa-solid fa-cube text-indigo-400"></i>',
-                    'Products': '<i class="fa-solid fa-bag-shopping text-pink-400"></i>',
-                    'Electronics': '<i class="fa-solid fa-laptop text-cyan-400"></i>',
-                    'Miscellaneous': '<i class="fa-solid fa-puzzle-piece text-amber-400"></i>'
+                    'Materials': '<i class="fa-solid fa-cube text-indigo-500 dark:text-indigo-400"></i>',
+                    'Products': '<i class="fa-solid fa-bag-shopping text-pink-500 dark:text-pink-400"></i>',
+                    'Electronics': '<i class="fa-solid fa-laptop text-cyan-500 dark:text-cyan-400"></i>',
+                    'Miscellaneous': '<i class="fa-solid fa-puzzle-piece text-amber-500 dark:text-amber-400"></i>'
                 };
                 return map[cat] || '<i class="fa-solid fa-tag text-slate-400"></i>';
             }
 
-            // Render Process
             function renderApp() {
                 updateDashboard();
                 
@@ -386,18 +491,14 @@
                 const filter = filterSelect.value;
                 const sortMethod = sortSelect.value;
 
-                // 1. Filter
                 let processedList = wishlist.filter(item => {
-                    const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                    const matchesSearch = item.name.toLowerCase().includes(searchTerm) || (item.notes && item.notes.toLowerCase().includes(searchTerm));
                     const matchesCategory = filter === 'All' || item.category === filter;
                     return matchesSearch && matchesCategory;
                 });
 
-                // 2. Sort 
                 processedList.sort((a, b) => {
-                    // Always put acquired items at the bottom regardless of sort
                     if (a.purchased !== b.purchased) return a.purchased ? 1 : -1;
-
                     if (sortMethod === 'date-desc') return b.createdAt - a.createdAt;
                     if (sortMethod === 'date-asc') return a.createdAt - b.createdAt;
                     if (sortMethod === 'price-desc') return (b.price || 0) - (a.price || 0);
@@ -417,6 +518,9 @@
                     if(wishlist.length > 0) {
                         emptyState.querySelector('h3').textContent = "No matches found";
                         emptyState.querySelector('p').textContent = "Try adjusting your search or filters.";
+                    } else {
+                        emptyState.querySelector('h3').textContent = "Nothing here yet!";
+                        emptyState.querySelector('p').textContent = "Your Kavali is empty. Start adding items you wish to acquire using the form.";
                     }
                 } else {
                     emptyState.classList.add('hidden');
@@ -424,26 +528,37 @@
 
                     processedList.forEach(item => {
                         const nameEscaped = escapeHTML(item.name);
+                        const notesEscaped = item.notes ? escapeHTML(item.notes) : '';
                         const isPurchased = item.purchased;
-                        const cardState = isPurchased ? 'bg-slate-50 border-slate-200 opacity-75' : 'bg-white border-slate-100 card-hover';
-                        const textState = isPurchased ? 'line-through text-slate-400' : 'text-slate-800';
                         
+                        // Dark mode card logic
+                        const cardState = isPurchased 
+                            ? 'bg-slate-50 border-slate-200 dark:bg-[#0f172a] dark:border-slate-800 opacity-60' 
+                            : 'bg-white border-slate-200 dark:bg-dark-card dark:border-dark-border card-hover';
+                            
+                        const textState = isPurchased 
+                            ? 'line-through text-slate-400 dark:text-slate-500' 
+                            : 'text-slate-900 dark:text-white';
+
                         const itemHTML = `
-                            <div class="${cardState} p-5 rounded-2xl border shadow-sm animate-fade-in flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between transition-all duration-300">
+                            <div class="${cardState} p-5 sm:p-6 rounded-2xl border shadow-sm animate-fade-in flex flex-col sm:flex-row gap-5 items-start sm:items-center justify-between transition-all duration-300 relative overflow-hidden">
                                 
                                 <div class="flex items-start gap-4 flex-1 overflow-hidden w-full">
                                     <button onclick="togglePurchased('${item.id}')" 
-                                        class="mt-1 w-7 h-7 rounded-lg border-2 flex shrink-0 items-center justify-center transition-all ${isPurchased ? 'bg-brand-500 border-brand-500 text-white shadow-inner' : 'border-slate-300 bg-slate-50 text-transparent hover:border-brand-400 hover:bg-white'}">
+                                        class="mt-1 w-7 h-7 rounded-lg border-2 flex shrink-0 items-center justify-center transition-all ${isPurchased ? 'bg-brand-500 border-brand-500 text-white shadow-inner' : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-transparent hover:border-brand-400 dark:hover:border-brand-500'}">
                                         <i class="fa-solid fa-check text-sm"></i>
                                     </button>
                                     
                                     <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-3 mb-1.5 flex-wrap">
-                                            <h3 class="font-extrabold text-lg ${textState} truncate">${nameEscaped}</h3>
-                                            ${item.url ? `<a href="${item.url}" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-brand-100 hover:text-brand-600 transition-colors" title="Visit Link"><i class="fa-solid fa-link text-xs"></i></a>` : ''}
+                                        <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                            <h3 class="font-extrabold text-lg sm:text-xl ${textState} truncate">${nameEscaped}</h3>
+                                            ${item.url ? `<a href="${item.url}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-brand-100 hover:text-brand-600 dark:hover:bg-brand-900/30 dark:hover:text-brand-400 transition-colors" title="Visit Link"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>` : ''}
                                         </div>
+                                        
+                                        ${notesEscaped ? `<p class="text-sm text-slate-500 dark:text-slate-400 mb-3 italic line-clamp-2">${notesEscaped}</p>` : ''}
+                                        
                                         <div class="flex items-center gap-3 flex-wrap">
-                                            <span class="text-sm font-medium text-slate-600 flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-md">
+                                            <span class="text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
                                                 ${getCategoryIcon(item.category)} ${item.category}
                                             </span>
                                             ${getPriorityBadge(item.priority, isPurchased)}
@@ -451,17 +566,17 @@
                                     </div>
                                 </div>
 
-                                <div class="flex items-center justify-between w-full sm:w-auto gap-4 pl-11 sm:pl-0">
-                                    <div class="text-xl font-bold tracking-tight ${isPurchased ? 'text-slate-400' : 'text-slate-800'}">
-                                        ${item.price > 0 ? formatCurrency(item.price) : '<span class="text-sm font-medium text-slate-400 bg-slate-100 px-2 py-1 rounded">No price</span>'}
+                                <div class="flex items-center justify-between w-full sm:w-auto gap-6 pl-11 sm:pl-0 mt-2 sm:mt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-4 sm:pt-0">
+                                    <div class="text-2xl font-black tracking-tight ${isPurchased ? 'text-slate-400 dark:text-slate-600' : 'text-slate-800 dark:text-white'}">
+                                        ${item.price > 0 ? formatCurrency(item.price) : '<span class="text-sm font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">No price</span>'}
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <button onclick="editItem('${item.id}')" title="Edit item"
-                                            class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 bg-white border border-slate-200 hover:text-amber-600 hover:border-amber-200 hover:bg-amber-50 transition-all shadow-sm">
+                                            class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-amber-600 dark:hover:text-amber-400 hover:border-amber-200 dark:hover:border-amber-500/30 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-all shadow-sm">
                                             <i class="fa-solid fa-pen text-sm"></i>
                                         </button>
                                         <button onclick="deleteItem('${item.id}')" title="Delete item"
-                                            class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 bg-white border border-slate-200 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-all shadow-sm">
+                                            class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all shadow-sm">
                                             <i class="fa-regular fa-trash-can text-sm"></i>
                                         </button>
                                     </div>
