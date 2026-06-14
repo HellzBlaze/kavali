@@ -136,8 +136,11 @@
                         </div>
 
                         <div>
-                            <div class="flex justify-between mb-1.5">
+                            <div class="flex justify-between items-end mb-1.5">
                                 <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Category <span class="text-red-400">*</span></label>
+                                <button type="button" onclick="openCategoryManager()" class="text-[13px] text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 font-bold transition-colors flex items-center gap-1.5">
+                                    <i class="fa-solid fa-sliders"></i> Manage
+                                </button>
                             </div>
                             <select id="input-category" required onchange="handleCategoryChange(this)"
                                 class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all appearance-none cursor-pointer text-slate-900 dark:text-white">
@@ -236,6 +239,30 @@
         </div>
     </div>
 
+    <!-- Category Manager Modal -->
+    <div id="category-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white dark:bg-dark-card w-full max-w-md p-6 rounded-3xl shadow-2xl border border-slate-100 dark:border-dark-border m-4 transform transition-all scale-95 opacity-0" id="category-modal-content">
+            <div class="flex justify-between items-center mb-5 border-b border-slate-100 dark:border-slate-800 pb-4">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-brand-500"></i> Manage Categories
+                </h3>
+                <button onclick="closeCategoryManager()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            
+            <div id="category-list" class="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
+                <!-- JS Injected Categories -->
+            </div>
+            
+            <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="closeCategoryManager()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold py-3 rounded-xl transition-colors">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Application Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -251,7 +278,6 @@
             });
 
             // --- Data Migration & State ---
-            // Handles old localstorage strings and updates them to the new data structure natively.
             let wishlist = [];
             let categories = ['Materials', 'Products', 'Electronics', 'Miscellaneous'];
 
@@ -263,15 +289,14 @@
                     wishlist = newData.wishlist;
                     categories = newData.categories || categories;
                 } else if (oldData && Array.isArray(oldData)) {
-                    // Migrate old priorities (High/Med/Low) to 1 to 10
                     wishlist = oldData.map(item => {
                         if (item.priority === 'High') item.priority = 1;
                         if (item.priority === 'Medium') item.priority = 5;
                         if (item.priority === 'Low') item.priority = 10;
                         return item;
                     });
-                    saveData(); // Save in new format
-                    localStorage.removeItem('kavali_wishlist'); // Cleanup old format
+                    saveData(); 
+                    localStorage.removeItem('kavali_wishlist'); 
                 }
             } catch (e) { console.error("Error loading data", e); }
 
@@ -284,6 +309,8 @@
             const sortSelect = document.getElementById('sort-items');
             const categorySelect = document.getElementById('input-category');
             const editIdInput = document.getElementById('edit-id');
+            const categoryModal = document.getElementById('category-modal');
+            const categoryModalContent = document.getElementById('category-modal-content');
 
             // --- Utilities ---
             const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
@@ -301,7 +328,96 @@
             sortSelect.addEventListener('change', renderApp);
             document.getElementById('import-file').addEventListener('change', handleImport);
 
-            // --- Categories Logic ---
+            // --- Category Management Modal Logic ---
+            window.openCategoryManager = function() {
+                renderCategoryManager();
+                categoryModal.classList.remove('hidden');
+                categoryModal.classList.add('flex');
+                setTimeout(() => {
+                    categoryModalContent.classList.remove('scale-95', 'opacity-0');
+                    categoryModalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            };
+
+            window.closeCategoryManager = function() {
+                categoryModalContent.classList.remove('scale-100', 'opacity-100');
+                categoryModalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    categoryModal.classList.add('hidden');
+                    categoryModal.classList.remove('flex');
+                }, 200);
+            };
+
+            window.renderCategoryManager = function() {
+                const list = document.getElementById('category-list');
+                list.innerHTML = categories.map(cat => {
+                    const safeCat = encodeURIComponent(cat); // Safe parameter passing
+                    return `
+                    <div class="flex items-center justify-between bg-slate-50 dark:bg-slate-800/50 p-3.5 rounded-xl border border-slate-100 dark:border-slate-700">
+                        <span class="font-bold text-slate-700 dark:text-slate-200 truncate pr-2">${escapeHTML(cat)}</span>
+                        <div class="flex gap-2 shrink-0">
+                            <button onclick="renameCategory(decodeURIComponent('${safeCat}'))" title="Rename" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 hover:text-amber-500 hover:border-amber-200 transition-all shadow-sm">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </button>
+                            <button onclick="deleteCategory(decodeURIComponent('${safeCat}'))" title="Delete" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 hover:text-red-500 hover:border-red-200 transition-all shadow-sm">
+                                <i class="fa-regular fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `}).join('');
+            };
+
+            window.renameCategory = function(oldName) {
+                const newName = prompt(`Rename category "${oldName}" to:`, oldName);
+                if (newName && newName.trim() !== "" && newName.trim() !== oldName) {
+                    const formattedName = newName.trim();
+                    
+                    if (categories.includes(formattedName)) {
+                        alert("A category with this name already exists.");
+                        return;
+                    }
+
+                    // Update Master List
+                    const catIndex = categories.indexOf(oldName);
+                    if (catIndex > -1) categories[catIndex] = formattedName;
+
+                    // Update Wishlist Items
+                    wishlist = wishlist.map(item => {
+                        if (item.category === oldName) item.category = formattedName;
+                        return item;
+                    });
+
+                    saveData();
+                    populateCategories();
+                    renderCategoryManager();
+                    renderApp();
+                }
+            };
+
+            window.deleteCategory = function(name) {
+                const itemsUsingCat = wishlist.filter(item => item.category === name).length;
+                let msg = `Are you sure you want to delete "${name}"?`;
+                if (itemsUsingCat > 0) {
+                    msg += `\n\nWarning: ${itemsUsingCat} item(s) are using this category. They will be reassigned to "Miscellaneous".`;
+                }
+
+                if (confirm(msg)) {
+                    if (!categories.includes('Miscellaneous')) categories.push('Miscellaneous');
+                    categories = categories.filter(c => c !== name);
+                    
+                    wishlist = wishlist.map(item => {
+                        if (item.category === name) item.category = 'Miscellaneous';
+                        return item;
+                    });
+
+                    saveData();
+                    populateCategories();
+                    renderCategoryManager();
+                    renderApp();
+                }
+            };
+
+            // --- Form Categories Logic ---
             function populateCategories() {
                 const formOptions = `<option value="" disabled selected>Select a category</option>` +
                     categories.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('') +
@@ -334,7 +450,7 @@
                 }
             }
 
-            // --- Add/Update Logic ---
+            // --- Add/Update Item Logic ---
             async function handleAddOrUpdate(e) {
                 e.preventDefault();
                 
@@ -355,7 +471,7 @@
                         const oldUrl = wishlist[index].url;
                         wishlist[index] = { ...wishlist[index], name, category, price, priority, url };
                         itemObj = wishlist[index];
-                        if(oldUrl !== url) itemObj.imageUrl = null; // reset image if url changed
+                        if(oldUrl !== url) itemObj.imageUrl = null; 
                     }
                     cancelEdit();
                 } else {
@@ -371,13 +487,12 @@
                 saveData();
                 renderApp();
 
-                // Fetch Image Preview asynchronously if a URL exists and no image is cached
                 if (itemObj && itemObj.url && !itemObj.imageUrl) {
                     fetchPreviewImage(itemObj.id, itemObj.url);
                 }
             }
 
-            // --- Async Image Fetching (Microlink API) ---
+            // --- Fetch Image Preview ---
             async function fetchPreviewImage(itemId, url) {
                 try {
                     const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
@@ -387,7 +502,7 @@
                         if (index !== -1) {
                             wishlist[index].imageUrl = data.data.image.url;
                             saveData();
-                            renderApp(); // re-render to show image
+                            renderApp(); 
                         }
                     }
                 } catch (err) { console.warn("Failed to fetch image preview"); }
@@ -473,7 +588,7 @@
 
             function saveData() { localStorage.setItem('kavali_data_v2', JSON.stringify({ wishlist, categories })); }
 
-            // --- Rendering ---
+            // --- Rendering App ---
             function getPriorityBadge(p, isPurchased) {
                 const op = isPurchased ? "opacity-50 grayscale" : "";
                 let colors = p <= 3 ? "bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20" :
@@ -493,10 +608,10 @@
             }
 
             function renderApp() {
-                // Update Stats
                 document.getElementById('stat-total').textContent = wishlist.length;
                 document.getElementById('stat-remaining').textContent = wishlist.filter(i => !i.purchased).length;
                 document.getElementById('stat-cost').textContent = formatCurrency(wishlist.reduce((sum, i) => !i.purchased ? sum + (i.price || 0) : sum, 0));
+                
                 const clearBtn = document.getElementById('clear-btn');
                 wishlist.some(i => i.purchased) ? clearBtn.classList.remove('hidden') : clearBtn.classList.add('hidden');
                 
@@ -508,7 +623,6 @@
                     return (item.name.toLowerCase().includes(searchTerm)) && (filter === 'All' || item.category === filter);
                 });
 
-                // Sort: Number 1 is Highest Priority. So sort ascending for Priority.
                 processedList.sort((a, b) => {
                     if (a.purchased !== b.purchased) return a.purchased ? 1 : -1;
                     if (sortMethod === 'date-desc') return b.createdAt - a.createdAt;
@@ -534,7 +648,6 @@
                         const cardState = isPurchased ? 'bg-slate-50 border-slate-200 dark:bg-[#0f172a] dark:border-slate-800 opacity-60' : 'bg-white border-slate-200 dark:bg-dark-card dark:border-dark-border card-hover';
                         const textState = isPurchased ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-white';
                         
-                        // Image Thumbnail or Fallback Block
                         const imageBlock = item.imageUrl 
                             ? `<img src="${item.imageUrl}" alt="${nameEscaped}" class="w-full h-full object-cover transition-opacity duration-300">`
                             : `<div class="w-full h-full flex items-center justify-center text-2xl opacity-40">${getCategoryIcon(item.category)}</div>`;
@@ -548,7 +661,6 @@
                                         <i class="fa-solid fa-check text-sm"></i>
                                     </button>
                                     
-                                    <!-- Thumbnail -->
                                     <div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                                         ${imageBlock}
                                     </div>
