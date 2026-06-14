@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kavali - Premium Wishlist Manager</title>
+    <title>Kavali - Premium Wishlist</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for Icons -->
@@ -30,7 +30,6 @@
         }
         .animate-fade-in { animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
@@ -38,7 +37,6 @@
         ::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
         .dark ::-webkit-scrollbar-thumb:hover { background-color: #64748b; }
         
-        /* Smooth transitions */
         .card-hover { transition: all 0.2s ease-in-out; }
         .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
         .dark .card-hover:hover { box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.5); border-color: #475569; }
@@ -48,8 +46,8 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
-        <!-- Header -->
-        <header class="mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <!-- Header & Controls -->
+        <header class="mb-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
                 <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-500 dark:from-brand-400 dark:to-indigo-400 tracking-tight flex items-center gap-3">
                     <i class="fa-solid fa-sparkles text-brand-500 dark:text-brand-400"></i> Kavali
@@ -67,7 +65,6 @@
                     <i class="fa-solid fa-file-export"></i> Export
                 </button>
                 
-                <!-- Clear Button -->
                 <button onclick="clearPurchased()" id="clear-btn" class="hidden bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm flex items-center gap-2">
                     <i class="fa-solid fa-broom"></i> Clear Acquired
                 </button>
@@ -80,9 +77,8 @@
             </div>
         </header>
 
-        <!-- Dashboard / Summary Stats -->
+        <!-- Dashboard Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <!-- Stat 1 -->
             <div class="bg-white dark:bg-dark-card rounded-3xl p-6 border border-slate-100 dark:border-dark-border shadow-sm flex items-center gap-5 relative overflow-hidden transition-colors">
                 <div class="absolute -right-4 -top-4 w-24 h-24 bg-brand-50 dark:bg-brand-900/20 rounded-full opacity-50"></div>
                 <div class="bg-gradient-to-br from-brand-100 to-brand-200 dark:from-brand-500/20 dark:to-brand-600/20 text-brand-600 dark:text-brand-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10 border border-brand-50 dark:border-brand-500/10">
@@ -94,7 +90,6 @@
                 </div>
             </div>
             
-            <!-- Stat 2 -->
             <div class="bg-white dark:bg-dark-card rounded-3xl p-6 border border-slate-100 dark:border-dark-border shadow-sm flex items-center gap-5 relative overflow-hidden transition-colors">
                 <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-full opacity-50"></div>
                 <div class="bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-500/20 dark:to-emerald-600/20 text-emerald-600 dark:text-emerald-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10 border border-emerald-50 dark:border-emerald-500/10">
@@ -106,7 +101,6 @@
                 </div>
             </div>
             
-            <!-- Stat 3 -->
             <div class="bg-white dark:bg-dark-card rounded-3xl p-6 border border-slate-100 dark:border-dark-border shadow-sm flex items-center gap-5 relative overflow-hidden transition-colors">
                 <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-50 dark:bg-amber-900/20 rounded-full opacity-50"></div>
                 <div class="bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-500/20 dark:to-amber-600/20 text-amber-600 dark:text-amber-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm z-10 border border-amber-50 dark:border-amber-500/10">
@@ -138,18 +132,16 @@
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Item Name <span class="text-red-400">*</span></label>
                             <input type="text" id="input-name" required placeholder="e.g. Sony WH-1000XM5" 
-                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 text-slate-900 dark:text-white">
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Category <span class="text-red-400">*</span></label>
-                            <select id="input-category" required 
+                            <div class="flex justify-between mb-1.5">
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Category <span class="text-red-400">*</span></label>
+                            </div>
+                            <select id="input-category" required onchange="handleCategoryChange(this)"
                                 class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all appearance-none cursor-pointer text-slate-900 dark:text-white">
-                                <option value="" disabled selected>Select a category</option>
-                                <option value="Materials">Materials</option>
-                                <option value="Products">Products</option>
-                                <option value="Electronics">Electronics</option>
-                                <option value="Miscellaneous">Miscellaneous</option>
+                                <!-- JS Populated -->
                             </select>
                         </div>
 
@@ -160,12 +152,19 @@
                                     class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white">
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Priority <span class="text-red-400">*</span></label>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5" title="1 is Highest, 10 is Lowest">Priority <span class="text-red-400">*</span></label>
                                 <select id="input-priority" required 
                                     class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all appearance-none cursor-pointer text-slate-900 dark:text-white">
-                                    <option value="Low">Low</option>
-                                    <option value="Medium" selected>Medium</option>
-                                    <option value="High">High</option>
+                                    <option value="1">1 (Highest)</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5" selected>5 (Medium)</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10 (Lowest)</option>
                                 </select>
                             </div>
                         </div>
@@ -174,12 +173,7 @@
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">URL / Link</label>
                             <input type="url" id="input-url" placeholder="https://..." 
                                 class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Notes (Optional)</label>
-                            <textarea id="input-notes" rows="2" placeholder="Promo codes, specific colors, reasons..." 
-                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white resize-none"></textarea>
+                            <p class="text-[11px] text-slate-500 mt-1"><i class="fa-solid fa-image"></i> Previews are fetched automatically from valid links.</p>
                         </div>
 
                         <button type="submit" id="submit-btn"
@@ -193,32 +187,26 @@
             <!-- Right Column: List -->
             <div class="lg:col-span-8 flex flex-col h-full">
                 
-                <!-- Controls Bar -->
+                <!-- Filter Bar -->
                 <div class="bg-white dark:bg-dark-card p-4 rounded-2xl border border-slate-100 dark:border-dark-border shadow-sm mb-6 flex flex-col md:flex-row gap-4 justify-between items-center z-10 transition-colors">
                     
                     <!-- Search -->
                     <div class="relative w-full md:w-5/12">
                         <i class="fa-solid fa-search absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-500"></i>
-                        <input type="text" id="search-input" placeholder="Search your wishlist..." 
+                        <input type="text" id="search-input" placeholder="Search Kavali..." 
                             class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:bg-white dark:focus:bg-[#1e293b] focus:ring-2 focus:ring-brand-500 outline-none transition-all text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500">
                     </div>
 
                     <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-                        <!-- Category Filter -->
                         <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 transition-colors">
-                            <i class="fa-solid fa-filter text-slate-400 dark:text-slate-500 text-sm"></i>
+                            <i class="fa-solid fa-filter text-slate-400 text-sm"></i>
                             <select id="filter-category" class="bg-transparent text-sm font-semibold text-slate-700 dark:text-slate-200 outline-none cursor-pointer w-full">
-                                <option value="All">All Categories</option>
-                                <option value="Materials">Materials</option>
-                                <option value="Products">Products</option>
-                                <option value="Electronics">Electronics</option>
-                                <option value="Miscellaneous">Miscellaneous</option>
+                                <!-- JS Populated -->
                             </select>
                         </div>
                         
-                        <!-- Sort -->
                         <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 transition-colors">
-                            <i class="fa-solid fa-arrow-down-wide-short text-slate-400 dark:text-slate-500 text-sm"></i>
+                            <i class="fa-solid fa-arrow-down-wide-short text-slate-400 text-sm"></i>
                             <select id="sort-items" class="bg-transparent text-sm font-semibold text-slate-700 dark:text-slate-200 outline-none cursor-pointer w-full">
                                 <option value="date-desc">Newest First</option>
                                 <option value="date-asc">Oldest First</option>
@@ -232,11 +220,11 @@
 
                 <!-- Empty State -->
                 <div id="empty-state" class="hidden flex-col items-center justify-center py-24 px-4 bg-white dark:bg-dark-card rounded-3xl border border-slate-200 dark:border-dark-border border-dashed transition-colors">
-                    <div class="w-24 h-24 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-400 dark:text-brand-500 text-4xl mb-6 shadow-inner">
+                    <div class="w-24 h-24 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-400 text-4xl mb-6 shadow-inner">
                         <i class="fa-solid fa-basket-shopping"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Nothing here yet!</h3>
-                    <p class="text-slate-500 dark:text-slate-400 mt-2 text-center max-w-sm">Your Kavali is empty. Start adding items you wish to acquire using the form.</p>
+                    <p class="text-slate-500 mt-2 text-center max-w-sm">Start adding items you wish to acquire using the form.</p>
                 </div>
 
                 <!-- Item List Container -->
@@ -254,103 +242,158 @@
             // --- Theme Setup ---
             const themeToggleBtn = document.getElementById('theme-toggle');
             const htmlElement = document.documentElement;
-            
-            // Check local storage or system preference
             if (localStorage.getItem('kavali_theme') === 'dark' || (!('kavali_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 htmlElement.classList.add('dark');
-            } else {
-                htmlElement.classList.remove('dark');
             }
-
             themeToggleBtn.addEventListener('click', () => {
                 htmlElement.classList.toggle('dark');
-                if (htmlElement.classList.contains('dark')) {
-                    localStorage.setItem('kavali_theme', 'dark');
-                } else {
-                    localStorage.setItem('kavali_theme', 'light');
-                }
+                localStorage.setItem('kavali_theme', htmlElement.classList.contains('dark') ? 'dark' : 'light');
             });
 
-            // --- State ---
-            let wishlist = JSON.parse(localStorage.getItem('kavali_wishlist')) || [];
+            // --- Data Migration & State ---
+            // Handles old localstorage strings and updates them to the new data structure natively.
+            let wishlist = [];
+            let categories = ['Materials', 'Products', 'Electronics', 'Miscellaneous'];
+
+            try {
+                const oldData = JSON.parse(localStorage.getItem('kavali_wishlist'));
+                const newData = JSON.parse(localStorage.getItem('kavali_data_v2'));
+                
+                if (newData && newData.wishlist) {
+                    wishlist = newData.wishlist;
+                    categories = newData.categories || categories;
+                } else if (oldData && Array.isArray(oldData)) {
+                    // Migrate old priorities (High/Med/Low) to 1 to 10
+                    wishlist = oldData.map(item => {
+                        if (item.priority === 'High') item.priority = 1;
+                        if (item.priority === 'Medium') item.priority = 5;
+                        if (item.priority === 'Low') item.priority = 10;
+                        return item;
+                    });
+                    saveData(); // Save in new format
+                    localStorage.removeItem('kavali_wishlist'); // Cleanup old format
+                }
+            } catch (e) { console.error("Error loading data", e); }
 
             // --- DOM Elements ---
             const form = document.getElementById('add-item-form');
             const listContainer = document.getElementById('item-list');
             const emptyState = document.getElementById('empty-state');
-            
             const searchInput = document.getElementById('search-input');
             const filterSelect = document.getElementById('filter-category');
             const sortSelect = document.getElementById('sort-items');
-            
-            const clearBtn = document.getElementById('clear-btn');
-            const submitBtn = document.getElementById('submit-btn');
-            const cancelEditBtn = document.getElementById('cancel-edit-btn');
-            const formTitle = document.getElementById('form-title');
+            const categorySelect = document.getElementById('input-category');
             const editIdInput = document.getElementById('edit-id');
-            const fileInput = document.getElementById('import-file');
 
             // --- Utilities ---
             const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
-            // Updated to Indian Rupee (INR) formatting, 0 decimal places for cleaner look
-            const formatCurrency = (amount) => {
-                return new Intl.NumberFormat('en-IN', { 
-                    style: 'currency', 
-                    currency: 'INR',
-                    maximumFractionDigits: 0
-                }).format(amount || 0);
-            };
+            const formatCurrency = (amount) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount || 0);
             const escapeHTML = (str) => { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; };
 
-            // --- Initialize ---
+            // --- Initialization ---
+            populateCategories();
             renderApp();
 
-            // --- Listeners ---
+            // --- Event Listeners ---
             form.addEventListener('submit', handleAddOrUpdate);
             searchInput.addEventListener('input', renderApp);
             filterSelect.addEventListener('change', renderApp);
             sortSelect.addEventListener('change', renderApp);
-            
-            fileInput.addEventListener('change', handleImport);
+            document.getElementById('import-file').addEventListener('change', handleImport);
 
-            // --- Logic: Add / Update ---
-            function handleAddOrUpdate(e) {
+            // --- Categories Logic ---
+            function populateCategories() {
+                const formOptions = `<option value="" disabled selected>Select a category</option>` +
+                    categories.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('') +
+                    `<option value="ADD_NEW" class="font-bold text-brand-600 bg-brand-50">+ Add Custom Category...</option>`;
+                
+                const filterOptions = `<option value="All">All Categories</option>` + 
+                    categories.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('');
+
+                const currentCatVal = categorySelect.value;
+                categorySelect.innerHTML = formOptions;
+                filterSelect.innerHTML = filterOptions;
+                
+                if(categories.includes(currentCatVal)) categorySelect.value = currentCatVal;
+            }
+
+            window.handleCategoryChange = function(selectEl) {
+                if(selectEl.value === 'ADD_NEW') {
+                    const newCat = prompt("Enter new category name:");
+                    if(newCat && newCat.trim() !== "") {
+                        const formattedCat = newCat.trim();
+                        if(!categories.includes(formattedCat)) {
+                            categories.push(formattedCat);
+                            saveData();
+                            populateCategories();
+                        }
+                        categorySelect.value = formattedCat;
+                    } else {
+                        categorySelect.value = "";
+                    }
+                }
+            }
+
+            // --- Add/Update Logic ---
+            async function handleAddOrUpdate(e) {
                 e.preventDefault();
                 
                 const id = editIdInput.value;
                 const name = document.getElementById('input-name').value.trim();
                 const category = document.getElementById('input-category').value;
                 const price = parseFloat(document.getElementById('input-price').value) || 0;
-                const priority = document.getElementById('input-priority').value;
+                const priority = parseInt(document.getElementById('input-priority').value);
                 const url = document.getElementById('input-url').value.trim();
-                const notes = document.getElementById('input-notes').value.trim();
 
                 if (!name || !category) return;
 
+                let itemObj = null;
+
                 if (id) {
-                    // Update existing
                     const index = wishlist.findIndex(i => i.id === id);
                     if (index !== -1) {
-                        wishlist[index] = { ...wishlist[index], name, category, price, priority, url, notes };
+                        const oldUrl = wishlist[index].url;
+                        wishlist[index] = { ...wishlist[index], name, category, price, priority, url };
+                        itemObj = wishlist[index];
+                        if(oldUrl !== url) itemObj.imageUrl = null; // reset image if url changed
                     }
                     cancelEdit();
                 } else {
-                    // Add new
-                    wishlist.push({
-                        id: generateId(),
-                        name, category, price, priority, url, notes,
-                        purchased: false,
-                        createdAt: Date.now()
-                    });
+                    itemObj = {
+                        id: generateId(), name, category, price, priority, url,
+                        imageUrl: null, purchased: false, createdAt: Date.now()
+                    };
+                    wishlist.push(itemObj);
                     form.reset();
-                    document.getElementById('input-priority').value = 'Medium';
+                    document.getElementById('input-priority').value = '5';
                 }
 
                 saveData();
                 renderApp();
+
+                // Fetch Image Preview asynchronously if a URL exists and no image is cached
+                if (itemObj && itemObj.url && !itemObj.imageUrl) {
+                    fetchPreviewImage(itemObj.id, itemObj.url);
+                }
             }
 
-            // --- Logic: Edit Item ---
+            // --- Async Image Fetching (Microlink API) ---
+            async function fetchPreviewImage(itemId, url) {
+                try {
+                    const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+                    const data = await res.json();
+                    if (data.status === 'success' && data.data.image && data.data.image.url) {
+                        const index = wishlist.findIndex(i => i.id === itemId);
+                        if (index !== -1) {
+                            wishlist[index].imageUrl = data.data.image.url;
+                            saveData();
+                            renderApp(); // re-render to show image
+                        }
+                    }
+                } catch (err) { console.warn("Failed to fetch image preview"); }
+            }
+
+            // --- Edit / Actions ---
             window.editItem = function(id) {
                 const item = wishlist.find(i => i.id === id);
                 if (!item) return;
@@ -361,152 +404,118 @@
                 document.getElementById('input-price').value = item.price || '';
                 document.getElementById('input-priority').value = item.priority;
                 document.getElementById('input-url').value = item.url || '';
-                document.getElementById('input-notes').value = item.notes || '';
 
-                // UI Update
-                formTitle.textContent = "Edit Item";
-                submitBtn.innerHTML = '<i class="fa-solid fa-save"></i> <span>Save Changes</span>';
-                submitBtn.className = "w-full mt-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md transform hover:-translate-y-0.5 flex justify-center items-center gap-2";
-                cancelEditBtn.classList.remove('hidden');
-
+                document.getElementById('form-title').textContent = "Edit Item";
+                document.getElementById('submit-btn').innerHTML = '<i class="fa-solid fa-save"></i> <span>Save Changes</span>';
+                document.getElementById('submit-btn').className = "w-full mt-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md transform hover:-translate-y-0.5 flex justify-center items-center gap-2";
+                document.getElementById('cancel-edit-btn').classList.remove('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
             window.cancelEdit = function() {
                 editIdInput.value = '';
                 form.reset();
-                document.getElementById('input-priority').value = 'Medium';
-                
-                formTitle.textContent = "Add to Kavali";
-                submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i> <span>Add Item</span>';
-                submitBtn.className = "w-full mt-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-brand-500/25 transform hover:-translate-y-0.5 focus:ring-4 focus:ring-brand-500/50 flex justify-center items-center gap-2";
-                cancelEditBtn.classList.add('hidden');
+                document.getElementById('input-priority').value = '5';
+                document.getElementById('form-title').textContent = "Add to Kavali";
+                document.getElementById('submit-btn').innerHTML = '<i class="fa-solid fa-plus"></i> <span>Add Item</span>';
+                document.getElementById('submit-btn').className = "w-full mt-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-brand-500/25 transform hover:-translate-y-0.5 focus:ring-4 focus:ring-brand-500/50 flex justify-center items-center gap-2";
+                document.getElementById('cancel-edit-btn').classList.add('hidden');
             };
 
-            // --- Logic: Delete / Toggle / Clear ---
             window.deleteItem = function(id) {
                 if(confirm("Remove this item permanently?")) {
                     wishlist = wishlist.filter(item => item.id !== id);
                     if(editIdInput.value === id) cancelEdit();
-                    saveData();
-                    renderApp();
+                    saveData(); renderApp();
                 }
             };
 
             window.togglePurchased = function(id) {
                 const item = wishlist.find(item => item.id === id);
-                if (item) {
-                    item.purchased = !item.purchased;
-                    saveData();
-                    renderApp();
-                }
+                if (item) { item.purchased = !item.purchased; saveData(); renderApp(); }
             };
 
             window.clearPurchased = function() {
-                if(confirm("Clear all items marked as acquired? This cannot be undone.")) {
+                if(confirm("Clear all acquired items? This cannot be undone.")) {
                     wishlist = wishlist.filter(item => !item.purchased);
-                    saveData();
-                    renderApp();
+                    saveData(); renderApp();
                 }
             };
 
-            // --- Logic: Export / Import ---
+            // --- Import / Export ---
             window.exportData = function() {
-                if(wishlist.length === 0) return alert("Nothing to export!");
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(wishlist));
-                const downloadAnchorNode = document.createElement('a');
-                downloadAnchorNode.setAttribute("href", dataStr);
-                downloadAnchorNode.setAttribute("download", `kavali_backup_${new Date().toISOString().split('T')[0]}.json`);
-                document.body.appendChild(downloadAnchorNode); // required for firefox
-                downloadAnchorNode.click();
-                downloadAnchorNode.remove();
+                const exportPayload = { wishlist, categories };
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload));
+                const node = document.createElement('a');
+                node.setAttribute("href", dataStr);
+                node.setAttribute("download", `kavali_backup_${new Date().toISOString().split('T')[0]}.json`);
+                document.body.appendChild(node); node.click(); node.remove();
             };
 
             function handleImport(event) {
                 const file = event.target.files[0];
                 if (!file) return;
-                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     try {
-                        const importedData = JSON.parse(e.target.result);
-                        if (Array.isArray(importedData)) {
-                            // Merge logic (avoid duplicates by ID, though IDs are random so it mostly appends)
-                            wishlist = importedData; 
-                            saveData();
-                            renderApp();
+                        const imported = JSON.parse(e.target.result);
+                        if (imported.wishlist && Array.isArray(imported.wishlist)) {
+                            wishlist = imported.wishlist;
+                            if (imported.categories && Array.isArray(imported.categories)) categories = imported.categories;
+                            saveData(); populateCategories(); renderApp();
                             alert("Data imported successfully!");
-                        } else {
-                            alert("Invalid file format.");
-                        }
-                    } catch (err) {
-                        alert("Error parsing JSON file.");
-                    }
-                    fileInput.value = ""; // Reset input
+                        } else { alert("Invalid file format."); }
+                    } catch (err) { alert("Error parsing JSON file."); }
+                    document.getElementById('import-file').value = ""; 
                 };
                 reader.readAsText(file);
             }
 
-            // --- Logic: Save ---
-            function saveData() { localStorage.setItem('kavali_wishlist', JSON.stringify(wishlist)); }
+            function saveData() { localStorage.setItem('kavali_data_v2', JSON.stringify({ wishlist, categories })); }
 
-            // --- Rendering Functions ---
-            function updateDashboard() {
-                const totalItems = wishlist.length;
-                const remainingItems = wishlist.filter(item => !item.purchased).length;
-                const remainingCost = wishlist.reduce((sum, item) => !item.purchased ? sum + (item.price || 0) : sum, 0);
-
-                document.getElementById('stat-total').textContent = totalItems;
-                document.getElementById('stat-remaining').textContent = remainingItems;
-                document.getElementById('stat-cost').textContent = formatCurrency(remainingCost);
-
-                const hasPurchased = wishlist.some(i => i.purchased);
-                hasPurchased ? clearBtn.classList.remove('hidden') : clearBtn.classList.add('hidden');
-            }
-
-            function getPriorityBadge(priority, isPurchased) {
+            // --- Rendering ---
+            function getPriorityBadge(p, isPurchased) {
                 const op = isPurchased ? "opacity-50 grayscale" : "";
-                let colors = "";
-                if(priority === 'High') colors = "bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20";
-                else if(priority === 'Medium') colors = "bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20";
-                else colors = "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20";
-                
-                return `<span class="text-[10px] uppercase font-bold px-2.5 py-1.5 rounded border tracking-wider ${colors} ${op}">${priority}</span>`;
+                let colors = p <= 3 ? "bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20" :
+                             p <= 7 ? "bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20" :
+                             "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20";
+                return `<span class="text-[10px] uppercase font-bold px-2 py-1 rounded border tracking-wider ${colors} ${op}" title="Priority Level ${p}">PRIORITY: ${p}</span>`;
             }
 
             function getCategoryIcon(cat) {
                 const map = {
-                    'Materials': '<i class="fa-solid fa-cube text-indigo-500 dark:text-indigo-400"></i>',
-                    'Products': '<i class="fa-solid fa-bag-shopping text-pink-500 dark:text-pink-400"></i>',
-                    'Electronics': '<i class="fa-solid fa-laptop text-cyan-500 dark:text-cyan-400"></i>',
-                    'Miscellaneous': '<i class="fa-solid fa-puzzle-piece text-amber-500 dark:text-amber-400"></i>'
+                    'Materials': '<i class="fa-solid fa-cube text-indigo-500"></i>',
+                    'Products': '<i class="fa-solid fa-bag-shopping text-pink-500"></i>',
+                    'Electronics': '<i class="fa-solid fa-laptop text-cyan-500"></i>',
+                    'Miscellaneous': '<i class="fa-solid fa-puzzle-piece text-amber-500"></i>'
                 };
                 return map[cat] || '<i class="fa-solid fa-tag text-slate-400"></i>';
             }
 
             function renderApp() {
-                updateDashboard();
+                // Update Stats
+                document.getElementById('stat-total').textContent = wishlist.length;
+                document.getElementById('stat-remaining').textContent = wishlist.filter(i => !i.purchased).length;
+                document.getElementById('stat-cost').textContent = formatCurrency(wishlist.reduce((sum, i) => !i.purchased ? sum + (i.price || 0) : sum, 0));
+                const clearBtn = document.getElementById('clear-btn');
+                wishlist.some(i => i.purchased) ? clearBtn.classList.remove('hidden') : clearBtn.classList.add('hidden');
                 
                 const searchTerm = searchInput.value.toLowerCase();
                 const filter = filterSelect.value;
                 const sortMethod = sortSelect.value;
 
                 let processedList = wishlist.filter(item => {
-                    const matchesSearch = item.name.toLowerCase().includes(searchTerm) || (item.notes && item.notes.toLowerCase().includes(searchTerm));
-                    const matchesCategory = filter === 'All' || item.category === filter;
-                    return matchesSearch && matchesCategory;
+                    return (item.name.toLowerCase().includes(searchTerm)) && (filter === 'All' || item.category === filter);
                 });
 
+                // Sort: Number 1 is Highest Priority. So sort ascending for Priority.
                 processedList.sort((a, b) => {
                     if (a.purchased !== b.purchased) return a.purchased ? 1 : -1;
                     if (sortMethod === 'date-desc') return b.createdAt - a.createdAt;
                     if (sortMethod === 'date-asc') return a.createdAt - b.createdAt;
                     if (sortMethod === 'price-desc') return (b.price || 0) - (a.price || 0);
                     if (sortMethod === 'price-asc') return (a.price || 0) - (b.price || 0);
-                    if (sortMethod === 'priority') {
-                        const pMap = { 'High': 3, 'Medium': 2, 'Low': 1 };
-                        return pMap[b.priority] - pMap[a.priority];
-                    }
+                    if (sortMethod === 'priority') return a.priority - b.priority; 
                     return 0;
                 });
 
@@ -515,69 +524,61 @@
                 if (processedList.length === 0) {
                     emptyState.classList.remove('hidden');
                     emptyState.classList.add('flex');
-                    if(wishlist.length > 0) {
-                        emptyState.querySelector('h3').textContent = "No matches found";
-                        emptyState.querySelector('p').textContent = "Try adjusting your search or filters.";
-                    } else {
-                        emptyState.querySelector('h3').textContent = "Nothing here yet!";
-                        emptyState.querySelector('p').textContent = "Your Kavali is empty. Start adding items you wish to acquire using the form.";
-                    }
                 } else {
                     emptyState.classList.add('hidden');
                     emptyState.classList.remove('flex');
 
                     processedList.forEach(item => {
                         const nameEscaped = escapeHTML(item.name);
-                        const notesEscaped = item.notes ? escapeHTML(item.notes) : '';
                         const isPurchased = item.purchased;
+                        const cardState = isPurchased ? 'bg-slate-50 border-slate-200 dark:bg-[#0f172a] dark:border-slate-800 opacity-60' : 'bg-white border-slate-200 dark:bg-dark-card dark:border-dark-border card-hover';
+                        const textState = isPurchased ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-white';
                         
-                        // Dark mode card logic
-                        const cardState = isPurchased 
-                            ? 'bg-slate-50 border-slate-200 dark:bg-[#0f172a] dark:border-slate-800 opacity-60' 
-                            : 'bg-white border-slate-200 dark:bg-dark-card dark:border-dark-border card-hover';
-                            
-                        const textState = isPurchased 
-                            ? 'line-through text-slate-400 dark:text-slate-500' 
-                            : 'text-slate-900 dark:text-white';
+                        // Image Thumbnail or Fallback Block
+                        const imageBlock = item.imageUrl 
+                            ? `<img src="${item.imageUrl}" alt="${nameEscaped}" class="w-full h-full object-cover transition-opacity duration-300">`
+                            : `<div class="w-full h-full flex items-center justify-center text-2xl opacity-40">${getCategoryIcon(item.category)}</div>`;
 
                         const itemHTML = `
-                            <div class="${cardState} p-5 sm:p-6 rounded-2xl border shadow-sm animate-fade-in flex flex-col sm:flex-row gap-5 items-start sm:items-center justify-between transition-all duration-300 relative overflow-hidden">
+                            <div class="${cardState} p-4 sm:p-5 rounded-2xl border shadow-sm animate-fade-in flex flex-col sm:flex-row gap-5 items-start sm:items-center justify-between transition-all duration-300">
                                 
-                                <div class="flex items-start gap-4 flex-1 overflow-hidden w-full">
+                                <div class="flex items-center gap-4 flex-1 w-full overflow-hidden">
                                     <button onclick="togglePurchased('${item.id}')" 
-                                        class="mt-1 w-7 h-7 rounded-lg border-2 flex shrink-0 items-center justify-center transition-all ${isPurchased ? 'bg-brand-500 border-brand-500 text-white shadow-inner' : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-transparent hover:border-brand-400 dark:hover:border-brand-500'}">
+                                        class="w-7 h-7 rounded-lg border-2 flex shrink-0 items-center justify-center transition-all ${isPurchased ? 'bg-brand-500 border-brand-500 text-white shadow-inner' : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-transparent hover:border-brand-400 dark:hover:border-brand-500'}">
                                         <i class="fa-solid fa-check text-sm"></i>
                                     </button>
                                     
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-3 mb-2 flex-wrap">
-                                            <h3 class="font-extrabold text-lg sm:text-xl ${textState} truncate">${nameEscaped}</h3>
-                                            ${item.url ? `<a href="${item.url}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-brand-100 hover:text-brand-600 dark:hover:bg-brand-900/30 dark:hover:text-brand-400 transition-colors" title="Visit Link"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>` : ''}
+                                    <!-- Thumbnail -->
+                                    <div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                                        ${imageBlock}
+                                    </div>
+
+                                    <div class="flex-1 min-w-0 py-1">
+                                        <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                                            <h3 class="font-extrabold text-lg ${textState} truncate">${nameEscaped}</h3>
+                                            ${item.url ? `<a href="${item.url}" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-brand-100 hover:text-brand-600 transition-colors" title="Visit Link"><i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>` : ''}
                                         </div>
-                                        
-                                        ${notesEscaped ? `<p class="text-sm text-slate-500 dark:text-slate-400 mb-3 italic line-clamp-2">${notesEscaped}</p>` : ''}
-                                        
-                                        <div class="flex items-center gap-3 flex-wrap">
-                                            <span class="text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
-                                                ${getCategoryIcon(item.category)} ${item.category}
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <span class="text-[11px] font-bold text-slate-500 flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700">
+                                                ${getCategoryIcon(item.category)} <span class="truncate max-w-[100px]">${item.category}</span>
                                             </span>
                                             ${getPriorityBadge(item.priority, isPurchased)}
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center justify-between w-full sm:w-auto gap-6 pl-11 sm:pl-0 mt-2 sm:mt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-4 sm:pt-0">
-                                    <div class="text-2xl font-black tracking-tight ${isPurchased ? 'text-slate-400 dark:text-slate-600' : 'text-slate-800 dark:text-white'}">
-                                        ${item.price > 0 ? formatCurrency(item.price) : '<span class="text-sm font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">No price</span>'}
+                                <div class="flex items-center justify-between w-full sm:w-auto gap-4 pl-[3.25rem] sm:pl-0 mt-1 sm:mt-0">
+                                    <div class="text-xl font-black tracking-tight ${isPurchased ? 'text-slate-400 dark:text-slate-600' : 'text-slate-800 dark:text-white'}">
+                                        ${item.price > 0 ? formatCurrency(item.price) : '<span class="text-xs font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-md">No price</span>'}
                                     </div>
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-1.5">
                                         <button onclick="editItem('${item.id}')" title="Edit item"
-                                            class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-amber-600 dark:hover:text-amber-400 hover:border-amber-200 dark:hover:border-amber-500/30 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-all shadow-sm">
-                                            <i class="fa-solid fa-pen text-sm"></i>
+                                            class="w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-amber-500 transition-all shadow-sm">
+                                            <i class="fa-solid fa-pen text-xs"></i>
                                         </button>
                                         <button onclick="deleteItem('${item.id}')" title="Delete item"
-                                            class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all shadow-sm">
-                                            <i class="fa-regular fa-trash-can text-sm"></i>
+                                            class="w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-red-500 transition-all shadow-sm">
+                                            <i class="fa-regular fa-trash-can text-xs"></i>
                                         </button>
                                     </div>
                                 </div>
